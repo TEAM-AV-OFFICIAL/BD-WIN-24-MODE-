@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title> 𝐁𝐃 𝐖𝐈𝐍 𝟐𝟒 𝐌𝐎𝐃𝐄 </title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { height: 100%; height: 100dvh; overflow: hidden; background: #000; font-family: 'Segoe UI', Roboto, sans-serif; }
+
+        /* --- LOGIN PAGE --- */
+        #loginPage { display: flex; justify-content: center; align-items: center; height: 100%; height: 100dvh; background: radial-gradient(circle, #220000 0%, #000 100%); position: absolute; width: 100%; z-index: 40000; }
+        .login-box { width: 310px; padding: 30px 25px; background: rgba(15, 15, 15, 0.9); border: 1px solid #ffcc00; text-align: center; border-radius: 20px; box-shadow: 0 0 20px rgba(255, 204, 0, 0.2); }
+        .btn-main { background: linear-gradient(45deg, #ffcc00, #ff9900); border: none; padding: 14px; width: 100%; color: #000; font-weight: 900; border-radius: 10px; cursor: pointer; margin-bottom: 15px; font-size: 16px; display: block; text-decoration: none; }
+        .btn-telegram { background: #0088cc; color: #fff; border: none; padding: 12px; width: 100%; font-weight: bold; border-radius: 10px; cursor: pointer; text-decoration: none; display: block; font-size: 14px; }
+
+        /* --- EXTERNAL CLEAR PANEL --- */
+        #signalPanel {
+            position: absolute; top: 130px; left: 50%; transform: translateX(-50%);
+            width: 180px; z-index: 10000;
+            display: none; flex-direction: column; align-items: center;
+            cursor: move; touch-action: none;
+        }
+
+        .panel-container {
+            background: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 204, 0.4); 
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 200px;
+            justify-content: center;
+            position: relative;
+            overflow: hidden; 
+        }
+
+        /* --- LOGO WITH RGB FLASHING BORDER --- */
+        .photo-wrapper {
+            position: absolute; top: 8px; right: 8px;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            padding: 2px;
+            animation: rgbFlash 1.5s linear infinite;
+        }
+        @keyframes rgbFlash {
+            0% { background: red; box-shadow: 0 0 5px red; }
+            50% { background: blue; box-shadow: 0 0 10px blue; }
+            100% { background: red; box-shadow: 0 0 5px red; }
+        }
+
+        .user-photo {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            z-index: 11000;
+            cursor: pointer;
+            object-fit: cover;
+            background: #000;
+        }
+
+        /* --- LIVE LED INDICATOR --- */
+        .live-led-container {
+            display: flex; align-items: center; gap: 5px; margin-top: 8px;
+        }
+        .led-dot {
+            width: 8px; height: 8px; background: #ff0000; border-radius: 50%;
+            box-shadow: 0 0 8px #ff0000;
+            animation: ledBlink 0.8s infinite alternate;
+        }
+        @keyframes ledBlink {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0.3; transform: scale(0.8); }
+        }
+        .led-text { color: #00ffcc; font-size: 8px; font-weight: 900; letter-spacing: 1px; }
+
+        .glow-ring {
+            width: 110px; height: 110px; 
+            border: 3px solid #00ffcc; 
+            border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3); 
+            background: radial-gradient(circle, #001a1a 0%, #000 80%);
+            transition: all 0.5s ease;
+        }
+
+        .ring-action { animation: ringZoomShake 4s cubic-bezier(.36,.07,.19,.97) forwards; }
+        @keyframes ringZoomShake {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.1); border-color: #ffcc00; }
+            100% { transform: scale(1); }
+        }
+
+        #sig_type { 
+            color: #00ffcc; 
+            font-size: 26px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
+        }
+
+        #sig_number { 
+            font-size: 14px; 
+            font-weight: bold; 
+            color: #fff; 
+            letter-spacing: 2px;
+        }
+        
+        #periodText { 
+            margin-top: 5px; font-size: 9px; font-weight: 900; 
+            background: #00ffcc; color: #000;
+            padding: 2px 10px; border-radius: 5px;
+        }
+
+        #lockOverlay { text-align: center; width: 100%; z-index: 10; }
+        #passInput { 
+            width: 85%; padding: 8px; margin-bottom: 10px; 
+            background: #000; border: 1.5px solid #00ffcc; color: #fff; 
+            border-radius: 8px; text-align: center; outline: none; font-size: 12px;
+        }
+        .unlock-btn { background: #00ffcc; border: none; padding: 6px 20px; border-radius: 12px; font-weight: 900; cursor: pointer; font-size: 12px; }
+
+        #gamePage { display: none; height: 100dvh; width: 100vw; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+<div id="loginPage">
+    <div class="login-box">
+        <h2 style="color:#ffcc00; margin-bottom:20px;">TEAM AV VIP MOD</h2>
+        <button class="btn-main" onclick="enterApp()">LOGIN</button>
+        <a href="https://t.me/TEAM_AV_OFFICIAL_GROUP" class="btn-telegram">TELEGRAM CHANNEL</a>
+    </div>
+</div>
+
+<div id="gamePage">
+    <div id="signalPanel">
+        <div class="panel-container">
+            <div class="photo-wrapper">
+                <a href="https://t.me/TEAM_AV_OFFICIAL_GROUP" target="_blank" style="display:flex; width:100%; height:100%;">
+                    <img src="https://i.ibb.co/G4ZndGHm/IMG-20260418-021031-584.jpg" class="user-photo" alt="Channel Logo">
+                </a>
+            </div>
+
+            <div id="lockOverlay">
+                <span id="statusEmoji" style="font-size:25px; display:block;">🔒</span>
+                <input type="password" id="passInput" placeholder="PASSWORD">
+                <br>
+                <button class="unlock-btn" onclick="verifyPass()">UNLOCK</button>
+            </div>
+
+            <div id="signalContent" style="display: none; flex-direction: column; align-items: center;">
+                <div class="glow-ring" id="mainRing">
+                    <div id="sig_type">WAIT</div>
+                    <div id="sig_number">--</div>
+                </div>
+
+                <div class="live-led-container">
+                    <div class="led-dot"></div>
+                    <div class="led-text">LIVE SYNCING...</div>
+                </div>
+
+                <div id="periodText">PRD: -----</div>
+            </div>
+        </div>
+    </div>
+    <iframe id="gameIframe" src=""></iframe>
+</div>
+
+<script>
+    const API_URL = "https://draw.ar-lottery01.com/WinGo/WinGo_30S/GetHistoryIssuePage.json";
+    let lastPeriod = "";
+    let isLocked = false;
+    let currentPrediction = "";
+
+    function enterApp() {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('gamePage').style.display = 'block';
+        document.getElementById('signalPanel').style.display = 'flex';
+        document.getElementById('gameIframe').src = "https://12bdwin24.com/register?inviteCode=XBTPGZN&from=web";
+    }
+
+    function verifyPass() {
+        if(document.getElementById('passInput').value === "AV2026") {
+            document.getElementById('lockOverlay').style.display = 'none';
+            document.getElementById('signalContent').style.display = 'flex';
+            startSync();
+        } else {
+            document.getElementById('statusEmoji').innerText = "❌";
+            setTimeout(() => { document.getElementById('statusEmoji').innerText = "🔒"; }, 2000);
+        }
+    }
+
+    async function startSync() {
+        if (isLocked) return setTimeout(startSync, 1000);
+        try {
+            const res = await fetch(API_URL + "?ts=" + Date.now());
+            const json = await res.json();
+            if (json && json.data && json.data.list) {
+                let latestData = json.data.list[0];
+                let currentIssue = latestData.issueNumber;
+                
+                if (currentIssue !== lastPeriod) {
+                    if (lastPeriod !== "") {
+                        let actualNum = parseInt(latestData.number);
+                        let actualType = actualNum >= 5 ? "BIG" : "SMALL";
+                        await showResult(currentPrediction === actualType);
+                    }
+                    lastPeriod = currentIssue;
+                    updateUI(latestData);
+                }
+            }
+        } catch (e) { }
+        setTimeout(startSync, 2000);
+    }
+
+    function updateUI(data) {
+        let nextPeriod = (BigInt(data.issueNumber) + 1n).toString();
+        document.getElementById("periodText").innerText = "PRD: " + nextPeriod.slice(-5);
+        
+        let num = parseInt(data.number);
+        let sum = num + parseInt(nextPeriod.slice(-1));
+        currentPrediction = (sum % 2 === 0) ? "BIG" : "SMALL";
+        
+        const typeEl = document.getElementById("sig_type");
+        typeEl.innerText = currentPrediction;
+        typeEl.style.color = "#00ffcc";
+
+        let n1, n2;
+        if(currentPrediction === "BIG") {
+            let options = [5, 6, 7, 8, 9];
+            n1 = options.splice(Math.floor(Math.random() * options.length), 1)[0];
+            n2 = options[Math.floor(Math.random() * options.length)];
+        } else {
+            let options = [0, 1, 2, 3, 4];
+            n1 = options.splice(Math.floor(Math.random() * options.length), 1)[0];
+            n2 = options[Math.floor(Math.random() * options.length)];
+        }
+        document.getElementById("sig_number").innerText = n1 + " , " + n2;
+    }
+
+    function showResult(win) {
+        return new Promise(resolve => {
+            isLocked = true;
+            const ring = document.getElementById("mainRing");
+            const typeEl = document.getElementById("sig_type");
+            const numEl = document.getElementById("sig_number");
+            
+            ring.classList.add("ring-action");
+            
+            typeEl.innerText = win ? "WIN" : "LOSE";
+            typeEl.style.color = win ? "#00ff00" : "#ff0055";
+            numEl.innerText = win ? "🥳" : "😥";
+
+            setTimeout(() => {
+                ring.classList.remove("ring-action");
+                isLocked = false;
+                resolve();
+            }, 4000);
+        });
+    }
+
+    const panelObj = document.getElementById("signalPanel");
+    let x = 0, y = 0, startX, startY, active = false;
+    panelObj.addEventListener("touchstart", e => {
+        startX = e.touches[0].clientX - x; startY = e.touches[0].clientY - y;
+        active = true;
+    });
+    window.addEventListener("touchmove", e => {
+        if (!active) return;
+        x = e.touches[0].clientX - startX; y = e.touches[0].clientY - startY;
+        panelObj.style.transform = `translate3d(${x}px, ${y}px, 0) translateX(-50%)`;
+    }, {passive: false});
+    window.addEventListener("touchend", () => active = false);
+</script>
+
+</body>
+</html>
